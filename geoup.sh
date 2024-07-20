@@ -1,14 +1,25 @@
 #!/bin/bash
-# This script removes geoip.dat and geosite.dat files from /usr/share/xray/ directory and downloads the latest versions of these files from https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/
-# The script should be run every day at 3:00 AM
+# 该脚本从 /usr/share/xray/ 目录中删除 geoip.dat 和 geosite.dat 文件，
+# 并从指定的 URL 下载这些文件的最新版本。
 
-# Change directory to /usr/share/xray/
-cd /usr/share/xray/
+# 定义目标目录
+target_dir="/usr/share/xray/"
 
-# Remove geoip.dat and geosite.dat files
-rm geoip.dat
-rm geosite.dat
+# 如果目标目录不存在，则创建该目录
+if [ ! -d "$target_dir" ]; then
+  mkdir -p "$target_dir"
+  echo "目录 $target_dir 已创建。"
+fi
 
-# Download the latest versions of geoip.dat and geosite.dat files
-wget https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat
-wget https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat
+# 切换到目标目录
+cd "$target_dir" || { echo "无法切换到目录 $target_dir。"; exit 1; }
+
+# 删除 geoip.dat 和 geosite.dat 文件
+rm -f geoip.dat
+rm -f geosite.dat
+
+# 下载最新版本的 geoip.dat 和 geosite.dat 文件
+wget -O geoip.dat https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat
+wget -O geosite.dat https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat
+
+echo "geoip.dat 和 geosite.dat 已更新。"
